@@ -3,15 +3,14 @@ import requests
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
 
-# Установка уровня логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-ANNOUNCEMENT_URL = 'http://127.0.0.1:8000/api/announcement/?limit={limit}&offset={offset}'
-CURRENT_ANNOUNCEMENT_URL = 'http://127.0.0.1:8000/api/announcement/{}/'
-ANNOUNCEMENT_COUNT_URL = 'http://127.0.0.1:8000/api/announcement/counter/'
-LIKE_URL = 'http://127.0.0.1:8000/api/announcement/{}/like/'
-DISLIKE_URL = 'http://127.0.0.1:8000/api/announcement/{}/dislike/'
+ANNOUNCEMENT_URL = 'http://139.59.215.111/api/announcement/?limit={limit}&offset={offset}'
+CURRENT_ANNOUNCEMENT_URL = 'http://139.59.215.111/api/announcement/{}/'
+ANNOUNCEMENT_COUNT_URL = 'http://139.59.215.111/api/announcement/counter/'
+LIKE_URL = 'http://139.59.215.111/api/announcement/{}/like/'
+DISLIKE_URL = 'http://139.59.215.111/api/announcement/{}/dislike/'
 
 users_data = {}
 
