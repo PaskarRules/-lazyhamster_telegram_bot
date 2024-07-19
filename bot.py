@@ -3,14 +3,24 @@ import requests
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
 
-logging.basicConfig(level=logging.INFO)
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levellevel_name)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-ANNOUNCEMENT_URL = 'http://139.59.215.111/api/announcement/?limit={limit}&offset={offset}'
-CURRENT_ANNOUNCEMENT_URL = 'http://139.59.215.111/api/announcement/{}/'
-ANNOUNCEMENT_COUNT_URL = 'http://139.59.215.111/api/announcement/counter/'
-LIKE_URL = 'http://139.59.215.111/api/announcement/{}/like/'
-DISLIKE_URL = 'http://139.59.215.111/api/announcement/{}/dislike/'
+TOKEN = os.getenv('YOUR_TELEGRAM_BOT_TOKEN')
+API_IP = os.getenv('API_IP')
+
+ANNOUNCEMENT_URL = API_IP + '/api/announcement/?limit={limit}&offset={offset}'
+CURRENT_ANNOUNCEMENT_URL = API_IP + '/api/announcement/{}/'
+ANNOUNCEMENT_COUNT_URL = API_IP + '/api/announcement/counter/'
+LIKE_URL = API_IP + '/api/announcement/{}/like/'
+DISLIKE_URL = API_IP + '/api/announcement/{}/dislike/'
 
 users_data = {}
 
@@ -143,17 +153,20 @@ def like_dislike(update: Update, context: CallbackContext) -> None:
 
 
 def main() -> None:
-    updater = Updater("7441871392:AAHlh0VLEhtIUmBTx1-FMAT9JgFLlp_Lp2s")
+    if not TOKEN:
+        raise ValueError("Необходимо задать переменную окружения 'YOUR_TELEGRAM_BOT_TOKEN'")
+
+    updater = Updater(token=TOKEN, use_context=True)
 
     dispatcher = updater.dispatcher
-
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CallbackQueryHandler(poll, pattern='^poll$'))
     dispatcher.add_handler(CallbackQueryHandler(show_posts, pattern='^show_posts$'))
     dispatcher.add_handler(CallbackQueryHandler(change_page, pattern='^(next_page|prev_page|first_page|last_page)$'))
     dispatcher.add_handler(CallbackQueryHandler(like_dislike, pattern='^(like|dislike)_'))
-
     updater.start_polling()
+    print('Heroku prints polling')
+    logger.info('Heroku logger info polling')
     updater.idle()
 
 
